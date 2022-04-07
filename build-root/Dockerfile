@@ -18,7 +18,18 @@ ENV XDG_CACHE_HOME /build/cache
 RUN /build/bazelisk || true
 RUN mv /build/cache/bazelisk/downloads/bazelbuild/bazel-${bazel_version}-linux-x86_64/bin/bazel /build/bazel
 
-FROM gcr.io/distroless/java17-debian11
+FROM gcr.io/distroless/java17-debian11 as bazel-distroless
+
+WORKDIR /app
+
+ENV PATH="/app/bin:${PATH}"
+
+COPY --from=builder /build/bazelisk /app/bin/bazelisk
+COPY --from=builder /build/bazel /app/bin/bazel
+
+ENTRYPOINT ["/app/bin/bazel"]
+
+FROM --platform=linux/amd64 docker.io/library/ubuntu:jammy-20220404 as bazel-ubuntu-jammy
 
 WORKDIR /app
 
