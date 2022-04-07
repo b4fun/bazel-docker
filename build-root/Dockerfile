@@ -29,7 +29,7 @@ COPY --from=builder /build/bazel /app/bin/bazel
 
 ENTRYPOINT ["/app/bin/bazel"]
 
-FROM --platform=linux/amd64 docker.io/library/ubuntu:jammy-20220404 as bazel-ubuntu-jammy
+FROM --platform=linux/amd64 docker.io/library/openjdk:17-jdk-bullseye as bazel-openjdk-17-bullseye
 
 WORKDIR /app
 
